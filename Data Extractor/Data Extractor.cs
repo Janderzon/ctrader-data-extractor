@@ -11,20 +11,33 @@ namespace cAlgo.Robots
     [Robot(TimeZone = TimeZones.UTC, AccessRights = AccessRights.FileSystem)]
     public class DataExtractor : Robot
     {
-        [Parameter(DefaultValue = 0.0)]
-        public double Parameter { get; set; }
+        [Parameter(DefaultValue = "History.csv")]
+        public string outputFile { get; set; }
 
-        [Parameter()]
+        [Parameter(DefaultValue = ".\\")]
         public string outputFilePath { get; set; }
+
+        [Parameter(DefaultValue = true)]
+        public bool askPrice { get; set; }
+
+        private string _filePath = string.Empty;
 
         protected override void OnStart()
         {
-            File.AppendAllText(outputFilePath + ".csv", "Ask,\n");
+            _filePath = outputFilePath + outputFile;
+
+            if (this.askPrice)
+                File.AppendAllText(_filePath, "Ask,");
+
+            File.AppendAllText(_filePath, "\n");
         }
 
         protected override void OnTick()
         {
-            File.AppendAllText(outputFilePath + ".csv", Ask.ToString() + ",\n");
+            if (this.askPrice)
+                File.AppendAllText(_filePath, Ask.ToString() + ",");
+
+            File.AppendAllText(_filePath, "\n");
         }
 
         protected override void OnStop()
