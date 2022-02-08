@@ -19,7 +19,7 @@ namespace cAlgo.Robots
 
         protected override void OnStart()
         {
-            // Put your initialization logic here
+            File.AppendAllText(outputFilePath + ".csv", "Ask,\n");
         }
 
         protected override void OnTick()
