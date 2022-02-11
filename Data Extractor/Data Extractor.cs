@@ -18,6 +18,9 @@ namespace cAlgo.Robots
         public string outputFilePath { get; set; }
 
         [Parameter(DefaultValue = true)]
+        public bool time { get; set; }
+
+        [Parameter(DefaultValue = true)]
         public bool askPrice { get; set; }
 
         private string _filePath = string.Empty;
@@ -26,6 +29,8 @@ namespace cAlgo.Robots
         {
             _filePath = outputFilePath + outputFile;
 
+            if (this.time)
+                File.AppendAllText(_filePath, "Time,");
             if (this.askPrice)
                 File.AppendAllText(_filePath, "Ask,");
 
@@ -34,6 +39,8 @@ namespace cAlgo.Robots
 
         protected override void OnTick()
         {
+            if (this.time)
+                File.AppendAllText(_filePath, Time.ToString() + ",");
             if (this.askPrice)
                 File.AppendAllText(_filePath, Ask.ToString() + ",");
 
