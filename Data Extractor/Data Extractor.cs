@@ -18,10 +18,10 @@ namespace cAlgo.Robots
         public string outputFilePath { get; set; }
 
         [Parameter(DefaultValue = true)]
-        public bool time { get; set; }
+        public bool openTime { get; set; }
 
         [Parameter(DefaultValue = true)]
-        public bool askPrice { get; set; }
+        public bool openPrice { get; set; }
 
         private string _filePath = string.Empty;
 
@@ -29,20 +29,20 @@ namespace cAlgo.Robots
         {
             _filePath = outputFilePath + outputFile;
 
-            if (this.time)
-                File.AppendAllText(_filePath, "Time,");
-            if (this.askPrice)
-                File.AppendAllText(_filePath, "Ask,");
+            if (this.openTime)
+                File.AppendAllText(_filePath, "OpenTime,");
+            if (this.openPrice)
+                File.AppendAllText(_filePath, "OpenPrice,");
 
             File.AppendAllText(_filePath, "\n");
         }
 
-        protected override void OnTick()
+        protected override void OnBar()
         {
-            if (this.time)
-                File.AppendAllText(_filePath, Time.ToString() + ",");
-            if (this.askPrice)
-                File.AppendAllText(_filePath, Ask.ToString() + ",");
+            if (this.openTime)
+                File.AppendAllText(_filePath, Bars.Last().OpenTime.ToString() + ",");
+            if (this.openPrice)
+                File.AppendAllText(_filePath, Bars.Last().Open + ",");
 
             File.AppendAllText(_filePath, "\n");
         }
