@@ -23,6 +23,9 @@ namespace cAlgo.Robots
         [Parameter(DefaultValue = true)]
         public bool openPrice { get; set; }
 
+        [Parameter()]
+        public DataSeries Source { get; set; }
+
         private string _filePath = string.Empty;
 
         protected override void OnStart()
@@ -42,7 +45,10 @@ namespace cAlgo.Robots
             if (this.openTime)
                 File.AppendAllText(_filePath, Bars.Last().OpenTime.ToString() + ",");
             if (this.openPrice)
-                File.AppendAllText(_filePath, Bars.Last().Open + ",");
+            {
+                double openPriceSMANormalised = Bars.Last().Open - Indicators.SimpleMovingAverage(Source, 24 * 7).Result.LastValue;
+                File.AppendAllText(_filePath, openPriceSMANormalised + ",");
+            }
 
             File.AppendAllText(_filePath, "\n");
         }
