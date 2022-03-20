@@ -32,9 +32,9 @@ namespace cAlgo.Robots
         {
             _filePath = OutputFilePath + OutputFile;
 
-            if (this.OpenTime)
+            if (OpenTime)
                 File.AppendAllText(_filePath, "OpenTime,");
-            if (this.OpenPrice)
+            if (OpenPrice)
                 File.AppendAllText(_filePath, "OpenPrice,");
 
             File.AppendAllText(_filePath, "\n");
@@ -42,9 +42,9 @@ namespace cAlgo.Robots
 
         protected override void OnBar()
         {
-            if (this.OpenTime)
+            if (OpenTime)
                 File.AppendAllText(_filePath, Bars.Last().OpenTime.ToString() + ",");
-            if (this.OpenPrice)
+            if (OpenPrice)
             {
                 double openPriceSMANormalised = Bars.Last().Open - Indicators.SimpleMovingAverage(Source, 24 * 7).Result.LastValue;
                 File.AppendAllText(_filePath, openPriceSMANormalised + ",");
