@@ -12,16 +12,16 @@ namespace cAlgo.Robots
     public class DataExtractor : Robot
     {
         [Parameter(DefaultValue = "History.csv")]
-        public string outputFile { get; set; }
+        public string OutputFile { get; set; }
 
         [Parameter(DefaultValue = ".\\")]
-        public string outputFilePath { get; set; }
+        public string OutputFilePath { get; set; }
 
         [Parameter(DefaultValue = true)]
-        public bool openTime { get; set; }
+        public bool OpenTime { get; set; }
 
         [Parameter(DefaultValue = true)]
-        public bool openPrice { get; set; }
+        public bool OpenPrice { get; set; }
 
         [Parameter()]
         public DataSeries Source { get; set; }
@@ -30,11 +30,11 @@ namespace cAlgo.Robots
 
         protected override void OnStart()
         {
-            _filePath = outputFilePath + outputFile;
+            _filePath = OutputFilePath + OutputFile;
 
-            if (this.openTime)
+            if (this.OpenTime)
                 File.AppendAllText(_filePath, "OpenTime,");
-            if (this.openPrice)
+            if (this.OpenPrice)
                 File.AppendAllText(_filePath, "OpenPrice,");
 
             File.AppendAllText(_filePath, "\n");
@@ -42,9 +42,9 @@ namespace cAlgo.Robots
 
         protected override void OnBar()
         {
-            if (this.openTime)
+            if (this.OpenTime)
                 File.AppendAllText(_filePath, Bars.Last().OpenTime.ToString() + ",");
-            if (this.openPrice)
+            if (this.OpenPrice)
             {
                 double openPriceSMANormalised = Bars.Last().Open - Indicators.SimpleMovingAverage(Source, 24 * 7).Result.LastValue;
                 File.AppendAllText(_filePath, openPriceSMANormalised + ",");
