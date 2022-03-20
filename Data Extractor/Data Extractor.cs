@@ -1,10 +1,5 @@
-﻿using System;
-using System.IO;
-using System.Linq;
+﻿using System.IO;
 using cAlgo.API;
-using cAlgo.API.Indicators;
-using cAlgo.API.Internals;
-using cAlgo.Indicators;
 
 namespace cAlgo.Robots
 {
@@ -21,10 +16,7 @@ namespace cAlgo.Robots
         public bool OpenTime { get; set; }
 
         [Parameter(DefaultValue = true)]
-        public bool OpenPrice { get; set; }
-
-        [Parameter()]
-        public DataSeries Source { get; set; }
+        public bool ClosePrice { get; set; }
 
         private string _filePath = string.Empty;
 
@@ -34,8 +26,8 @@ namespace cAlgo.Robots
 
             if (OpenTime)
                 File.AppendAllText(_filePath, "OpenTime,");
-            if (OpenPrice)
-                File.AppendAllText(_filePath, "OpenPrice,");
+            if (ClosePrice)
+                File.AppendAllText(_filePath, "ClosePrice,");
 
             File.AppendAllText(_filePath, "\n");
         }
@@ -43,11 +35,11 @@ namespace cAlgo.Robots
         protected override void OnBar()
         {
             if (OpenTime)
-                File.AppendAllText(_filePath, Bars.Last().OpenTime.ToString() + ",");
-            if (OpenPrice)
+                File.AppendAllText(_filePath, Bars.Last(1).OpenTime.ToString() + ",");
+            if (ClosePrice)
             {
-                double openPriceSMANormalised = Bars.Last().Open - Indicators.SimpleMovingAverage(Source, 24 * 7).Result.LastValue;
-                File.AppendAllText(_filePath, openPriceSMANormalised + ",");
+                double closePriceSMANormalised = Bars.Last(1).Close - Indicators.SimpleMovingAverage(Bars.ClosePrices, 24 * 7).Result.Last(2);
+                File.AppendAllText(_filePath, closePriceSMANormalised + ",");
             }
 
             File.AppendAllText(_filePath, "\n");
